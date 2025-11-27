@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML Skills Dictionary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .search-box {
+            background: white;
+            border-radius: 50px;
+            padding: 15px 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            flex: 1;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .search-box input::placeholder {
+            color: #999;
+        }
+
+        .search-icon {
+            color: #667eea;
+            font-size: 1.2rem;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            padding: 8px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: white;
+            color: #667eea;
+            border-color: white;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .skill-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+        }
+
+        .skill-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .skill-icon {
+            font-size: 1.8rem;
+            min-width: 40px;
+        }
+
+        .skill-title {
+            flex: 1;
+        }
+
+        .skill-title h3 {
+            font-size: 1rem;
+            color: #2d3748;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .skill-category {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .skill-description {
+            color: #4a5568;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag {
+            background: #f7fafc;
+            color: #4a5568;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .no-results {
+            text-align: center;
+            color: white;
+            padding: 60px 20px;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 ML & AI Skills Dictionary</h1>
+            <p>Explore essential Machine Learning & Data Science competencies</p>
+        </div>
+
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Search skills, tools, or frameworks...">
+        </div>
+
+        <div class="filter-tabs">
+            <button class="filter-btn active" data-filter="all">All Skills</button>
+            <button class="filter-btn" data-filter="Programming">Programming</button>
+            <button class="filter-btn" data-filter="ML Frameworks">ML Frameworks</button>
+            <button class="filter-btn" data-filter="MLOps">MLOps</button>
+            <button class="filter-btn" data-filter="Mathematics">Mathematics</button>
+            <button class="filter-btn" data-filter="Deep Learning">Deep Learning</button>
+            <button class="filter-btn" data-filter="Cloud">Cloud</button>
+            <button class="filter-btn" data-filter="Data Tools">Data Tools</button>
+        </div>
+
+        <div class="skills-grid" id="skillsGrid"></div>
+        <div class="no-results" id="noResults" style="display: none;">
+            No skills found matching your search
+        </div>
+    </div>
+
+    <script>
+        const skills = [
+            {
+                icon: '🐍',
+                title: 'Python Programming',
+                category: 'Programming',
+                description: 'The primary language for ML/AI development. Master data structures, OOP, functional programming, and popular libraries for efficient algorithm implementation.',
+                tags: ['NumPy', 'Pandas', 'OOP', 'Data Structures']
+            },
+            {
+                icon: '📈',
+                title: 'Scikit-Learn',
+                category: 'ML Frameworks',
+                description: 'Popular Python library for classical ML algorithms including regression, classification, clustering, and model evaluation with simple API.',
+                tags: ['Classification', 'Regression', 'Clustering', 'Model Selection']
+            },
+            {
+                icon: '🎯',
+                title: 'XGBoost',
+                category: 'ML Frameworks',
+                description: 'Gradient boosting library for high-performance ML. Dominates Kaggle competitions with exceptional accuracy on structured data.',
+                tags: ['Boosting', 'Kaggle', 'Tabular Data', 'Ensemble']
+            },
+            {
+                icon: '🌳',
+                title: 'Random Forest',
+                category: 'ML Frameworks',
+                description: 'Ensemble learning method using multiple decision trees. Robust against overfitting and handles non-linear relationships well.',
+                tags: ['Ensemble', 'Decision Trees', 'Feature Importance', 'Classification']
+            },
+            {
+                icon: '📊',
+                title: 'Data Visualization',
+                category: 'Data Tools',
+                description: 'Creating meaningful charts and graphs using Matplotlib, Seaborn, Plotly for insights discovery and presentation.',
+                tags: ['Matplotlib', 'Seaborn', 'Plotly', 'Dashboards']
+            },
+            {
+                icon: '🔍',
+                title: 'Exploratory Data Analysis',
+                category: 'Data Tools',
+                description: 'Investigating datasets to discover patterns, spot anomalies, test hypotheses, and check assumptions using statistical graphics.',
+                tags: ['EDA', 'Statistics', 'Visualization', 'Insights']
+            },
+            {
+                icon: '🧠',
+                title: 'TensorFlow',
+                category: 'ML Frameworks',
+                description: 'Google\'s open-source ML framework for building and training neural networks. Excellent for production deployment with TensorFlow Serving and TFLite.',
+                tags: ['Neural Networks', 'Keras', 'Production', 'TPU']
+            },
+            {
+                icon: '🔥',
+                title: 'PyTorch',
+                category: 'ML Frameworks',
+                description: 'Facebook\'s dynamic ML framework favored in research. Features dynamic computation graphs, intuitive API, and strong community support.',
+                tags: ['Research', 'Dynamic Graphs', 'GPU', 'Computer Vision']
+            },
+            {
+                icon: '🚀',
+                title: 'MLFlow',
+                category: 'MLOps',
+                description: 'Open-source platform for managing ML lifecycle including experimentation, reproducibility, deployment, and model registry.',
+                tags: ['Tracking', 'Registry', 'Deployment', 'Versioning']
+            },
+            {
+                icon: '☸️',
+                title: 'Kubernetes',
+                category: 'MLOps',
+                description: 'Container orchestration for deploying and scaling ML models. Essential for managing microservices and ensuring high availability.',
+                tags: ['Containers', 'Scaling', 'Docker', 'Orchestration']
+            },
+            {
+                icon: '🔧',
+                title: 'Data Preprocessing',
+                category: 'Data Tools',
+                description: 'Techniques for cleaning, transforming, and preparing data. Includes handling missing values, feature engineering, normalization, and encoding.',
+                tags: ['Cleaning', 'Feature Engineering', 'Normalization', 'ETL']
+            },
+            {
+                icon: '📊',
+                title: 'Linear Algebra',
+                category: 'Mathematics',
+                description: 'Foundation of ML algorithms. Understand matrices, vectors, eigenvalues, and transformations crucial for neural networks and dimensionality reduction.',
+                tags: ['Matrices', 'Vectors', 'Eigenvalues', 'Transformations']
+            },
+            {
+                icon: '🎲',
+                title: 'Probability & Statistics',
+                category: 'Mathematics',
+                description: 'Essential for understanding uncertainty, distributions, hypothesis testing, and Bayesian inference in ML models.',
+                tags: ['Distributions', 'Bayes', 'Hypothesis Testing', 'Inference']
+            },
+            {
+                icon: '🤖',
+                title: 'Deep Learning',
+                category: 'Deep Learning',
+                description: 'Advanced neural networks including CNNs, RNNs, transformers, and attention mechanisms for complex pattern recognition tasks.',
+                tags: ['CNNs', 'RNNs', 'Transformers', 'Attention']
+            },
+            {
+                icon: '💬',
+                title: 'Natural Language Processing',
+                category: 'Deep Learning',
+                description: 'Techniques for processing and understanding human language. Includes tokenization, embeddings, BERT, GPT, and language models.',
+                tags: ['BERT', 'GPT', 'Tokenization', 'Embeddings']
+            },
+            {
+                icon: '☁️',
+                title: 'AWS',
+                category: 'Cloud',
+                description: 'Amazon Web Services for ML including SageMaker, EC2, S3, and Lambda. Scalable infrastructure for training and deploying models.',
+                tags: ['SageMaker', 'EC2', 'S3', 'Lambda']
+            },
+            {
+                icon: '🔷',
+                title: 'Azure',
+                category: 'Cloud',
+                description: 'Microsoft\'s cloud platform with Azure ML, Cognitive Services, and Databricks for enterprise ML solutions.',
+                tags: ['Azure ML', 'Cognitive Services', 'Databricks', 'Enterprise']
+            },
+            {
+                icon: '🌐',
+                title: 'Google Cloud Platform',
+                category: 'Cloud',
+                description: 'GCP services including Vertex AI, BigQuery ML, and TPU access for scalable ML workloads and data analytics.',
+                tags: ['Vertex AI', 'BigQuery', 'TPU', 'AutoML']
+            },
+            {
+                icon: '🗄️',
+                title: 'SQL',
+                category: 'Data Tools',
+                description: 'Structured Query Language for data manipulation and retrieval. Essential for working with relational databases and data warehouses.',
+                tags: ['Queries', 'Joins', 'PostgreSQL', 'MySQL']
+            },
+            {
+                icon: '⚡',
+                title: 'Apache Spark',
+                category: 'Data Tools',
+                description: 'Distributed computing framework for big data processing. Enables parallel processing of large datasets with MLlib for machine learning.',
+                tags: ['Big Data', 'PySpark', 'MLlib', 'Distributed']
+            },
+            {
+                icon: '🌊',
+                title: 'Apache Airflow',
+                category: 'Data Tools',
+                description: 'Workflow orchestration platform for creating, scheduling, and monitoring data pipelines and ML workflows.',
+                tags: ['DAGs', 'ETL', 'Scheduling', 'Orchestration']
+            },
+            {
+                icon: '👁️',
+                title: 'Computer Vision',
+                category: 'Deep Learning',
+                description: 'Image and video analysis using CNNs. Includes object detection, segmentation, facial recognition, and image generation.',
+                tags: ['OpenCV', 'YOLO', 'Segmentation', 'Detection']
+            },
+            {
+                icon: '📷',
+                title: 'OpenCV',
+                category: 'Deep Learning',
+                description: 'Open-source computer vision library for image processing, feature detection, and real-time video analysis.',
+                tags: ['Image Processing', 'Video', 'Detection', 'Real-time']
+            },
+            {
+                icon: '🧩',
+                title: 'Problem-Solving',
+                category: 'Programming',
+                description: 'Algorithmic thinking, debugging, optimization, and systematic approach to solving complex ML challenges.',
+                tags: ['Algorithms', 'Debugging', 'Optimization', 'Critical Thinking']
+            },
+            {
+                icon: '💼',
+                title: 'Communication',
+                category: 'Programming',
+                description: 'Ability to explain technical concepts to non-technical stakeholders, document code, and collaborate effectively in teams.',
+                tags: ['Documentation', 'Presentation', 'Collaboration', 'Stakeholders']
+            },
+            {
+                icon: '📐',
+                title: 'Feature Engineering',
+                category: 'Data Tools',
+                description: 'Creating new features from raw data to improve model performance. Includes domain knowledge application and creative transformations.',
+                tags: ['Feature Creation', 'Domain Knowledge', 'Transformations', 'Selection']
+            },
+            {
+                icon: '🎓',
+                title: 'Transfer Learning',
+                category: 'Deep Learning',
+                description: 'Leveraging pre-trained models like BERT, ResNet, or GPT for new tasks with limited data. Saves training time and resources.',
+                tags: ['Pre-trained Models', 'Fine-tuning', 'ResNet', 'BERT']
+            },
+            {
+                icon: '⚖️',
+                title: 'Model Evaluation',
+                category: 'ML Frameworks',
+                description: 'Assessing model performance using metrics like accuracy, precision, recall, F1-score, ROC-AUC, and cross-validation techniques.',
+                tags: ['Metrics', 'Cross-Validation', 'ROC-AUC', 'Confusion Matrix']
+            },
+            {
+                icon: '🔄',
+                title: 'CI/CD for ML',
+                category: 'MLOps',
+                description: 'Continuous Integration and Deployment pipelines for ML models. Automate testing, versioning, and deployment workflows.',
+                tags: ['Jenkins', 'GitLab CI', 'Automation', 'Testing']
+            },
+            {
+                icon: '📦',
+                title: 'Docker',
+                category: 'MLOps',
+                description: 'Containerization platform for packaging ML applications with dependencies. Ensures consistency across environments.',
+                tags: ['Containers', 'Images', 'Deployment', 'Portability']
+            },
+            {
+                icon: '🎮',
+                title: 'Reinforcement Learning',
+                category: 'Deep Learning',
+                description: 'Training agents to make decisions through trial and error. Applications in gaming, robotics, and autonomous systems.',
+                tags: ['Q-Learning', 'Policy Gradient', 'Reward', 'Agent']
+            },
+            {
+                icon: '🔬',
+                title: 'Hyperparameter Tuning',
+                category: 'ML Frameworks',
+                description: 'Optimizing model parameters using grid search, random search, or Bayesian optimization for better performance.',
+                tags: ['Grid Search', 'Optuna', 'Bayesian Optimization', 'AutoML']
+            },
+            {
+                icon: '🎨',
+                title: 'GANs',
+                category: 'Deep Learning',
+                description: 'Generative Adversarial Networks for creating synthetic data, image generation, and style transfer applications.',
+                tags: ['Generator', 'Discriminator', 'Image Synthesis', 'StyleGAN']
+            },
+            {
+                icon: '📱',
+                title: 'Edge AI',
+                category: 'MLOps',
+                description: 'Deploying ML models on edge devices like smartphones and IoT. Model optimization for resource-constrained environments.',
+                tags: ['TensorFlow Lite', 'ONNX', 'Mobile', 'IoT']
+            },
+            {
+                icon: '🔐',
+                title: 'Model Security',
+                category: 'MLOps',
+                description: 'Protecting ML models from adversarial attacks, ensuring data privacy, and implementing secure inference pipelines.',
+                tags: ['Adversarial', 'Privacy', 'Encryption', 'Robustness']
+            },
+            {
+                icon: '📉',
+                title: 'Dimensionality Reduction',
+                category: 'Mathematics',
+                description: 'Techniques like PCA, t-SNE, UMAP for reducing feature space while preserving information and visualizing high-dimensional data.',
+                tags: ['PCA', 't-SNE', 'UMAP', 'Visualization']
+            },
+            {
+                icon: '🎯',
+                title: 'Object Detection',
+                category: 'Deep Learning',
+                description: 'Identifying and locating objects in images using YOLO, R-CNN, or SSD architectures for real-time applications.',
+                tags: ['YOLO', 'R-CNN', 'Bounding Boxes', 'Real-time']
+            },
+            {
+                icon: '🗣️',
+                title: 'Speech Recognition',
+                category: 'Deep Learning',
+                description: 'Converting spoken language to text using deep learning models, ASR systems, and acoustic modeling techniques.',
+                tags: ['ASR', 'Wav2Vec', 'Whisper', 'Audio Processing']
+            },
+            {
+                icon: '💾',
+                title: 'Data Warehousing',
+                category: 'Data Tools',
+                description: 'Designing and managing data warehouses using Snowflake, Redshift, BigQuery for analytical workloads at scale.',
+                tags: ['Snowflake', 'Redshift', 'BigQuery', 'Star Schema']
+            },
+            {
+                icon: '🔗',
+                title: 'Graph Neural Networks',
+                category: 'Deep Learning',
+                description: 'Neural networks for graph-structured data. Applications in social networks, molecular chemistry, and recommendation systems.',
+                tags: ['GNN', 'Graph Theory', 'Node Classification', 'Link Prediction']
+            },
+            {
+                icon: '⏱️',
+                title: 'Time Series Analysis',
+                category: 'ML Frameworks',
+                description: 'Forecasting and analyzing temporal data using ARIMA, LSTM, Prophet for stock prices, sales, and sensor data.',
+                tags: ['ARIMA', 'LSTM', 'Prophet', 'Forecasting']
+            },
+            {
+                icon: '🎪',
+                title: 'Ensemble Methods',
+                category: 'ML Frameworks',
+                description: 'Combining multiple models for improved predictions. Includes bagging, boosting, and stacking techniques.',
+                tags: ['Bagging', 'Boosting', 'Stacking', 'Voting']
+            },
+            {
+                icon: '🧪',
+                title: 'A/B Testing',
+                category: 'Mathematics',
+                description: 'Statistical experimentation for comparing model versions. Essential for production ML and data-driven decisions.',
+                tags: ['Hypothesis Testing', 'P-values', 'Confidence Intervals', 'Experiments']
+            },
+            {
+                icon: '🌐',
+                title: 'RESTful APIs',
+                category: 'MLOps',
+                description: 'Building and deploying ML models as web services using Flask, FastAPI for model serving and integration.',
+                tags: ['Flask', 'FastAPI', 'Endpoints', 'HTTP']
+            },
+            {
+                icon: '📝',
+                title: 'Text Classification',
+                category: 'Deep Learning',
+                description: 'Categorizing text documents using NLP techniques. Applications in sentiment analysis, spam detection, and topic modeling.',
+                tags: ['Sentiment Analysis', 'Spam Detection', 'Topic Modeling', 'BERT']
+            },
+            {
+                icon: '🎭',
+                title: 'Data Augmentation',
+                category: 'Data Tools',
+                description: 'Artificially expanding training datasets through transformations, synthetic data generation, and regularization techniques.',
+                tags: ['Image Augmentation', 'Synthetic Data', 'Regularization', 'Albumentations']
+            },
+            {
+                icon: '📊',
+                title: 'Business Intelligence',
+                category: 'Data Tools',
+                description: 'Creating dashboards and reports using Tableau, Power BI for data-driven decision making and KPI tracking.',
+                tags: ['Tableau', 'Power BI', 'Dashboards', 'KPIs']
+            },
+            {
+                icon: '🔮',
+                title: 'AutoML',
+                category: 'ML Frameworks',
+                description: 'Automated machine learning platforms like H2O.ai, Auto-sklearn for model selection and hyperparameter optimization.',
+                tags: ['H2O.ai', 'Auto-sklearn', 'Automation', 'Model Selection']
+            },
+            {
+                icon: '🏗️',
+                title: 'Model Architecture Design',
+                category: 'Deep Learning',
+                description: 'Designing custom neural network architectures tailored to specific problems and computational constraints.',
+                tags: ['Network Design', 'Layer Configuration', 'Optimization', 'Custom Models']
+            },
+            {
+                icon: '🎯',
+                title: 'Gradient Descent',
+                category: 'Mathematics',
+                description: 'Optimization algorithm for minimizing loss functions. Variants include SGD, Adam, RMSprop for efficient model training.',
+                tags: ['SGD', 'Adam', 'Optimization', 'Backpropagation']
+            },
+            {
+                icon: '🧬',
+                title: 'Neural Architecture Search',
+                category: 'Deep Learning',
+                description: 'Automated discovery of optimal neural network architectures using evolutionary algorithms or reinforcement learning.',
+                tags: ['NAS', 'AutoML', 'Architecture', 'Optimization']
+            },
+            {
+                icon: '📊',
+                title: 'Batch Normalization',
+                category: 'Deep Learning',
+                description: 'Technique to normalize layer inputs for faster training, reduced overfitting, and improved model stability.',
+                tags: ['Normalization', 'Training', 'Regularization', 'Stability']
+            },
+            {
+                icon: '🎲',
+                title: 'Dropout',
+                category: 'Deep Learning',
+                description: 'Regularization technique randomly dropping neurons during training to prevent overfitting and improve generalization.',
+                tags: ['Regularization', 'Overfitting', 'Generalization', 'Neural Networks']
+            },
+            {
+                icon: '🔄',
+                title: 'Recurrent Neural Networks',
+                category: 'Deep Learning',
+                description: 'Networks with memory for sequential data. Includes LSTM and GRU for time series, text, and speech processing.',
+                tags: ['LSTM', 'GRU', 'Sequential Data', 'Memory']
+            },
+            {
+                icon: '👀',
+                title: 'Attention Mechanisms',
+                category: 'Deep Learning',
+                description: 'Focus on relevant parts of input data. Core component of transformers enabling breakthrough NLP performance.',
+                tags: ['Self-Attention', 'Transformers', 'Multi-Head', 'Context']
+            },
+            {
+                icon: '📚',
+                title: 'Word Embeddings',
+                category: 'Deep Learning',
+                description: 'Dense vector representations of words capturing semantic meaning. Includes Word2Vec, GloVe, and contextual embeddings.',
+                tags: ['Word2Vec', 'GloVe', 'Embeddings', 'Semantics']
+            },
+            {
+                icon: '🎬',
+                title: 'Sequence-to-Sequence',
+                category: 'Deep Learning',
+                description: 'Models for mapping input sequences to output sequences. Used in translation, summarization, and conversation.',
+                tags: ['Seq2Seq', 'Encoder-Decoder', 'Translation', 'Summarization']
+            },
+            {
+                icon: '🔊',
+                title: 'Audio Processing',
+                category: 'Deep Learning',
+                description: 'Analyzing and generating audio using spectrograms, MFCCs, and deep learning for music, speech, and sound classification.',
+                tags: ['Spectrograms', 'MFCC', 'Audio Classification', 'TTS']
+            },
+            {
+                icon: '🎨',
+                title: 'Image Segmentation',
+                category: 'Deep Learning',
+                description: 'Pixel-level classification using U-Net, Mask R-CNN for medical imaging, autonomous driving, and image editing.',
+                tags: ['U-Net', 'Mask R-CNN', 'Semantic', 'Instance']
+            },
+            {
+                icon: '🌟',
+                title: 'Few-Shot Learning',
+                category: 'Deep Learning',
+                description: 'Training models to learn from limited examples. Useful when labeled data is scarce or expensive to obtain.',
+                tags: ['Meta-Learning', 'Limited Data', 'Prototypical', 'Siamese']
+            },
+            {
+                icon: '🔍',
+                title: 'Anomaly Detection',
+                category: 'ML Frameworks',
+                description: 'Identifying outliers and unusual patterns in data for fraud detection, system monitoring, and quality control.',
+                tags: ['Outliers', 'Fraud Detection', 'Isolation Forest', 'Autoencoders']
+            },
+            {
+                icon: '🎯',
+                title: 'Recommendation Systems',
+                category: 'ML Frameworks',
+                description: 'Building personalized recommendation engines using collaborative filtering, content-based, and hybrid approaches.',
+                tags: ['Collaborative Filtering', 'Matrix Factorization', 'Netflix', 'Personalization']
+            },
+            {
+                icon: '📍',
+                title: 'Clustering',
+                category: 'ML Frameworks',
+                description: 'Grouping similar data points using K-means, DBSCAN, hierarchical clustering for pattern discovery and segmentation.',
+                tags: ['K-means', 'DBSCAN', 'Hierarchical', 'Unsupervised']
+            },
+            {
+                icon: '🎓',
+                title: 'Semi-Supervised Learning',
+                category: 'ML Frameworks',
+                description: 'Leveraging both labeled and unlabeled data to improve model performance when labels are limited or expensive.',
+                tags: ['Pseudo-Labeling', 'Co-Training', 'Limited Labels', 'SSL']
+            },
+            {
+                icon: '⚡',
+                title: 'Model Compression',
+                category: 'MLOps',
+                description: 'Reducing model size through pruning, quantization, and knowledge distillation for faster inference and deployment.',
+                tags: ['Pruning', 'Quantization', 'Distillation', 'Optimization']
+            },
+            {
+                icon: '🎮',
+                title: 'Model Interpretability',
+                category: 'MLOps',
+                description: 'Understanding model decisions using SHAP, LIME, attention visualization for transparency and debugging.',
+                tags: ['SHAP', 'LIME', 'Explainability', 'Feature Importance']
+            },
+            {
+                icon: '📈',
+                title: 'Learning Rate Scheduling',
+                category: 'Deep Learning',
+                description: 'Adjusting learning rates during training using step decay, cosine annealing, or adaptive methods for optimal convergence.',
+                tags: ['Scheduler', 'Cosine Annealing', 'Step Decay', 'Warmup']
+            },
+            {
+                icon: '🔬',
+                title: 'Experiment Tracking',
+                category: 'MLOps',
+                description: 'Logging experiments, metrics, and parameters using tools like Weights & Biases, TensorBoard for reproducibility.',
+                tags: ['W&B', 'TensorBoard', 'Metrics', 'Reproducibility']
+            },
+            {
+                icon: '🌍',
+                title: 'Distributed Training',
+                category: 'MLOps',
+                description: 'Training large models across multiple GPUs or machines using data parallelism and model parallelism techniques.',
+                tags: ['Multi-GPU', 'Horovod', 'Data Parallel', 'Model Parallel']
+            },
+            {
+                icon: '🔐',
+                title: 'Federated Learning',
+                category: 'MLOps',
+                description: 'Training models across decentralized devices while keeping data local for privacy-preserving machine learning.',
+                tags: ['Privacy', 'Decentralized', 'Edge', 'Data Privacy']
+            },
+            {
+                icon: '📦',
+                title: 'Model Registry',
+                category: 'MLOps',
+                description: 'Centralized repository for managing ML model versions, metadata, and lifecycle stages in production environments.',
+                tags: ['Versioning', 'Metadata', 'Lifecycle', 'Model Hub']
+            },
+            {
+                icon: '🎯',
+                title: 'Active Learning',
+                category: 'ML Frameworks',
+                description: 'Strategically selecting most informative samples for labeling to minimize annotation costs and maximize model performance.',
+                tags: ['Label Efficiency', 'Query Strategy', 'Human-in-Loop', 'Sampling']
+            },
+            {
+                icon: '🌊',
+                title: 'Data Streaming',
+                category: 'Data Tools',
+                description: 'Processing real-time data streams using Kafka, Flink for live predictions and continuous learning systems.',
+                tags: ['Kafka', 'Flink', 'Real-time', 'Stream Processing']
+            },
+            {
+                icon: '🧮',
+                title: 'Loss Functions',
+                category: 'Mathematics',
+                description: 'Defining optimization objectives: MSE, cross-entropy, focal loss, contrastive loss for different learning tasks.',
+                tags: ['MSE', 'Cross-Entropy', 'Focal Loss', 'Optimization']
+            },
+            {
+                icon: '🎨',
+                title: 'Style Transfer',
+                category: 'Deep Learning',
+                description: 'Transferring artistic styles between images using neural networks for creative applications and image transformation.',
+                tags: ['Neural Style', 'CycleGAN', 'Art', 'Image-to-Image']
+            },
+            {
+                icon: '🏃',
+                title: 'Model Inference',
+                category: 'MLOps',
+                description: 'Optimizing prediction speed and throughput using batching, caching, and hardware acceleration for production systems.',
+                tags: ['Latency', 'Throughput', 'Batching', 'GPU Inference']
+            },
+            {
+                icon: '📱',
+                title: 'Model Monitoring',
+                category: 'MLOps',
+                description: 'Tracking model performance, data drift, and concept drift in production to ensure reliability and trigger retraining.',
+                tags: ['Drift Detection', 'Performance', 'Alerting', 'Production']
+            },
+            {
+                icon: '🔄',
+                title: 'Online Learning',
+                category: 'ML Frameworks',
+                description: 'Continuously updating models with new data streams for adaptive systems that learn from real-time feedback.',
+                tags: ['Incremental', 'Streaming', 'Adaptive', 'Real-time']
+            },
+            {
+                icon: '🎪',
+                title: 'Meta-Learning',
+                category: 'Deep Learning',
+                description: 'Learning how to learn - training models that can quickly adapt to new tasks with minimal examples.',
+                tags: ['MAML', 'Few-Shot', 'Adaptation', 'Transfer']
+            },
+            {
+                icon: '💻',
+                title: 'Jupyter Notebooks',
+                category: 'Programming',
+                description: 'Interactive development environment for data science and ML. Enables code, visualization, and documentation in one place.',
+                tags: ['Interactive', 'Prototyping', 'Visualization', 'Documentation']
+            },
+            {
+                icon: '🔧',
+                title: 'Git Version Control',
+                category: 'Programming',
+                description: 'Managing code versions and collaboration using Git, GitHub, GitLab for tracking changes and team workflows.',
+                tags: ['GitHub', 'GitLab', 'Branching', 'Collaboration']
+            },
+            {
+                icon: '🐼',
+                title: 'Pandas DataFrames',
+                category: 'Data Tools',
+                description: 'Powerful data manipulation library for cleaning, transforming, and analyzing structured data in Python.',
+                tags: ['Data Manipulation', 'Cleaning', 'Analysis', 'Tables']
+            },
+            {
+                icon: '🔢',
+                title: 'NumPy Arrays',
+                category: 'Programming',
+                description: 'Fundamental package for numerical computing with efficient multi-dimensional arrays and mathematical operations.',
+                tags: ['Arrays', 'Linear Algebra', 'Numerical', 'Broadcasting']
+            },
+            {
+                icon: '📊',
+                title: 'Confusion Matrix',
+                category: 'Mathematics',
+                description: 'Table for evaluating classification performance showing true/false positives and negatives for model assessment.',
+                tags: ['Classification', 'Evaluation', 'Metrics', 'Performance']
+            },
+            {
+                icon: '🎯',
+                title: 'Precision & Recall',
+                category: 'Mathematics',
+                description: 'Key classification metrics balancing false positives and false negatives for imbalanced datasets.',
+                tags: ['Metrics', 'F1-Score', 'Evaluation', 'Imbalanced Data']
+            },
+            {
+                icon: '📈',
+                title: 'ROC Curve',
+                category: 'Mathematics',
+                description: 'Receiver Operating Characteristic curve visualizing classifier performance across different threshold values.',
+                tags: ['AUC', 'Classification', 'Threshold', 'Performance']
+            },
+            {
+                icon: '🔀',
+                title: 'Train-Test Split',
+                category: 'ML Frameworks',
+                description: 'Dividing data into training and testing sets to evaluate model generalization and prevent overfitting.',
+                tags: ['Validation', 'Generalization', 'Dataset Split', 'Testing']
+            },
+            {
+                icon: '🎲',
+                title: 'Overfitting & Underfitting',
+                category: 'ML Frameworks',
+                description: 'Understanding bias-variance tradeoff to balance model complexity and generalization performance.',
+                tags: ['Bias-Variance', 'Generalization', 'Model Complexity', 'Regularization']
+            },
+            {
+                icon: '🔄',
+                title: 'Cross-Validation',
+                category: 'ML Frameworks',
+                description: 'K-fold and stratified validation techniques for robust model evaluation and hyperparameter selection.',
+                tags: ['K-Fold', 'Stratified', 'Validation', 'Robust Evaluation']
+            },
+            {
+                icon: '🎨',
+                title: 'Convolutional Neural Networks',
+                category: 'Deep Learning',
+                description: 'Specialized networks for image processing using convolution layers to detect spatial patterns and features.',
+                tags: ['CNNs', 'Image Processing', 'Convolution', 'Feature Maps']
+            },
+            {
+                icon: '🌐',
+                title: 'REST API Development',
+                category: 'MLOps',
+                description: 'Creating scalable web APIs for ML model deployment using frameworks like Flask, FastAPI, and Django.',
+                tags: ['Flask', 'FastAPI', 'Django', 'Endpoints']
+            },
+            {
+                icon: '📦',
+                title: 'Virtual Environments',
+                category: 'Programming',
+                description: 'Isolated Python environments using venv, conda for managing dependencies and avoiding version conflicts.',
+                tags: ['venv', 'Conda', 'Dependencies', 'Isolation']
+            },
+            {
+                icon: '🔍',
+                title: 'Regex & Pattern Matching',
+                category: 'Programming',
+                description: 'Regular expressions for text processing, validation, and extraction in data preprocessing pipelines.',
+                tags: ['Regular Expressions', 'Text Processing', 'Parsing', 'Validation']
+            },
+            {
+                icon: '⚡',
+                title: 'GPU Acceleration',
+                category: 'MLOps',
+                description: 'Leveraging NVIDIA CUDA and cuDNN for accelerating deep learning training and inference on GPUs.',
+                tags: ['CUDA', 'cuDNN', 'NVIDIA', 'Performance']
+            },
+            {
+                icon: '🎯',
+                title: 'Logistic Regression',
+                category: 'ML Frameworks',
+                description: 'Binary classification algorithm using sigmoid function for probability estimation and linear decision boundaries.',
+                tags: ['Classification', 'Sigmoid', 'Binary', 'Linear']
+            },
+            {
+                icon: '📐',
+                title: 'Linear Regression',
+                category: 'ML Frameworks',
+                description: 'Fundamental regression algorithm modeling linear relationships between features and continuous target variables.',
+                tags: ['Regression', 'Linear Model', 'Least Squares', 'Prediction']
+            },
+            {
+                icon: '🌳',
+                title: 'Decision Trees',
+                category: 'ML Frameworks',
+                description: 'Tree-based models using recursive partitioning for interpretable classification and regression tasks.',
+                tags: ['CART', 'Interpretable', 'Splitting', 'Tree Structure']
+            },
+            {
+                icon: '🎯',
+                title: 'Support Vector Machines',
+                category: 'ML Frameworks',
+                description: 'Powerful classification algorithm finding optimal hyperplanes with kernel tricks for non-linear boundaries.',
+                tags: ['SVM', 'Kernel Trick', 'Margin', 'Classification']
+            },
+            {
+                icon: '🧠',
+                title: 'Neural Network Basics',
+                category: 'Deep Learning',
+                description: 'Understanding perceptrons, activation functions, forward/backward propagation in multi-layer networks.',
+                tags: ['Perceptron', 'Activation', 'Backprop', 'Layers']
+            },
+            {
+                icon: '📊',
+                title: 'Data Normalization',
+                category: 'Data Tools',
+                description: 'Scaling features using min-max, z-score, or robust scaling for improved model convergence and performance.',
+                tags: ['Scaling', 'Standardization', 'Min-Max', 'Z-Score']
+            },
+            {
+                icon: '🔍',
+                title: 'Missing Data Handling',
+                category: 'Data Tools',
+                description: 'Techniques for imputation, deletion, and interpolation to handle incomplete datasets effectively.',
+                tags: ['Imputation', 'Deletion', 'Interpolation', 'Data Quality']
+            },
+            {
+                icon: '🎨',
+                title: 'One-Hot Encoding',
+                category: 'Data Tools',
+                description: 'Converting categorical variables into binary vectors for use in machine learning algorithms.',
+                tags: ['Categorical', 'Encoding', 'Binary', 'Feature Engineering']
+            },
+            {
+                icon: '📉',
+                title: 'Gradient Boosting',
+                category: 'ML Frameworks',
+                description: 'Ensemble technique building models sequentially to correct errors. Includes XGBoost, LightGBM, CatBoost.',
+                tags: ['XGBoost', 'LightGBM', 'CatBoost', 'Ensemble']
+            },
+            {
+                icon: '🎭',
+                title: 'Data Imbalance',
+                category: 'Data Tools',
+                description: 'Handling skewed class distributions using SMOTE, undersampling, or class weighting techniques.',
+                tags: ['SMOTE', 'Undersampling', 'Class Weights', 'Resampling']
+            },
+            {
+                icon: '🔬',
+                title: 'Feature Selection',
+                category: 'Data Tools',
+                description: 'Identifying most relevant features using filter, wrapper, or embedded methods to reduce dimensionality.',
+                tags: ['Filter Methods', 'Wrapper', 'Embedded', 'Dimensionality']
+            },
+            {
+                icon: '🌟',
+                title: 'Baseline Models',
+                category: 'ML Frameworks',
+                description: 'Simple benchmark models establishing minimum performance standards before complex model development.',
+                tags: ['Benchmarking', 'Simple Models', 'Comparison', 'Standards']
+            },
+            {
+                icon: '📱',
+                title: 'Model Serialization',
+                category: 'MLOps',
+                description: 'Saving and loading trained models using pickle, joblib, ONNX for deployment and sharing.',
+                tags: ['Pickle', 'Joblib', 'ONNX', 'Saving Models']
+            },
+            {
+                icon: '🎯',
+                title: 'Named Entity Recognition',
+                category: 'Deep Learning',
+                description: 'Extracting entities like names, locations, organizations from text using sequence labeling techniques.',
+                tags: ['NER', 'Entity Extraction', 'SpaCy', 'Information Extraction']
+            },
+            {
+                icon: '📚',
+                title: 'Tokenization',
+                category: 'Deep Learning',
+                description: 'Breaking text into tokens, words, or subwords for NLP processing using BPE, WordPiece, or SentencePiece.',
+                tags: ['BPE', 'WordPiece', 'Subword', 'Text Processing']
+            },
+            {
+                icon: '🎯',
+                title: 'Naive Bayes',
+                category: 'ML Frameworks',
+                description: 'Probabilistic classifier based on Bayes theorem. Fast and effective for text classification and spam filtering.',
+                tags: ['Probabilistic', 'Text Classification', 'Spam Filter', 'Bayes']
+            },
+            {
+                icon: '📊',
+                title: 'K-Nearest Neighbors',
+                category: 'ML Frameworks',
+                description: 'Instance-based learning algorithm classifying points based on nearest neighbors in feature space.',
+                tags: ['KNN', 'Instance-Based', 'Lazy Learning', 'Distance']
+            },
+            {
+                icon: '🌀',
+                title: 'Principal Component Analysis',
+                category: 'Mathematics',
+                description: 'Dimensionality reduction technique finding principal components to capture maximum variance in data.',
+                tags: ['PCA', 'Dimensionality', 'Variance', 'Eigenvectors']
+            },
+            {
+                icon: '🎨',
+                title: 'Label Encoding',
+                category: 'Data Tools',
+                description: 'Converting categorical labels to numerical values for ordinal data representation in ML models.',
+                tags: ['Categorical', 'Ordinal', 'Encoding', 'Preprocessing']
+            },
+            {
+                icon: '⚖️',
+                title: 'Class Imbalance Handling',
+                category: 'ML Frameworks',
+                description: 'Techniques like oversampling, undersampling, and synthetic data generation for imbalanced classification.',
+                tags: ['Oversampling', 'Undersampling', 'Synthetic', 'Balance']
+            },
+            {
+                icon: '🔮',
+                title: 'Bayesian Optimization',
+                category: 'ML Frameworks',
+                description: 'Efficient hyperparameter tuning using probabilistic models to find optimal configurations with fewer trials.',
+                tags: ['Hyperparameters', 'Optimization', 'Efficient Search', 'GP']
+            },
+            {
+                icon: '📈',
+                title: 'Learning Curves',
+                category: 'ML Frameworks',
+                description: 'Visualizing model performance vs training set size to diagnose overfitting and underfitting issues.',
+                tags: ['Diagnostic', 'Performance', 'Training Size', 'Visualization']
+            },
+            {
+                icon: '🎯',
+                title: 'Multi-Class Classification',
+                category: 'ML Frameworks',
+                description: 'Classifying instances into more than two categories using one-vs-rest or softmax approaches.',
+                tags: ['Softmax', 'One-vs-Rest', 'Multi-Label', 'Classification']
+            },
+            {
+                icon: '🔢',
+                title: 'Feature Scaling',
+                category: 'Data Tools',
+                description: 'Bringing features to similar scales using standardization or normalization for improved model training.',
+                tags: ['Standardization', 'Normalization', 'Scaling', 'Preprocessing']
+            },
+            {
+                icon: '🧪',
+                title: 'Stratified Sampling',
+                category: 'Data Tools',
+                description: 'Sampling technique preserving class distributions in train-test splits for representative evaluation.',
+                tags: ['Sampling', 'Class Distribution', 'Representative', 'Splitting']
+            },
+            {
+                icon: '🎬',
+                title: 'Batch Processing',
+                category: 'MLOps',
+                description: 'Processing data in batches for efficient training and inference with optimal memory usage.',
+                tags: ['Mini-Batch', 'Memory', 'Efficiency', 'Training']
+            },
+            {
+                icon: '🔄',
+                title: 'Data Pipelines',
+                category: 'Data Tools',
+                description: 'Automated workflows for data extraction, transformation, and loading in production ML systems.',
+                tags: ['ETL', 'Automation', 'Workflow', 'Pipeline']
+            },
+            {
+                icon: '🌐',
+                title: 'Web Scraping',
+                category: 'Data Tools',
+                description: 'Extracting data from websites using BeautifulSoup, Scrapy, Selenium for dataset creation.',
+                tags: ['BeautifulSoup', 'Scrapy', 'Selenium', 'Data Collection']
+            },
+            {
+                icon: '📊',
+                title: 'Statistical Testing',
+                category: 'Mathematics',
+                description: 'Hypothesis testing, t-tests, chi-square tests for validating model improvements and data analysis.',
+                tags: ['Hypothesis Testing', 'T-Test', 'Chi-Square', 'Significance']
+            },
+            {
+                icon: '🎯',
+                title: 'Multi-Task Learning',
+                category: 'Deep Learning',
+                description: 'Training single model on multiple related tasks simultaneously for improved generalization and efficiency.',
+                tags: ['Shared Layers', 'Task-Specific', 'Efficiency', 'Transfer']
+            },
+            {
+                icon: '🔍',
+                title: 'Grid Search',
+                category: 'ML Frameworks',
+                description: 'Exhaustive hyperparameter search over specified parameter grid for optimal model configuration.',
+                tags: ['Hyperparameter', 'Exhaustive', 'Search', 'Tuning']
+            },
+            {
+                icon: '🎲',
+                title: 'Random Search',
+                category: 'ML Frameworks',
+                description: 'Random sampling of hyperparameter space, often more efficient than grid search for high dimensions.',
+                tags: ['Hyperparameter', 'Random Sampling', 'Efficient', 'Search']
+            },
+            {
+                icon: '🧬',
+                title: 'Genetic Algorithms',
+                category: 'ML Frameworks',
+                description: 'Evolutionary optimization inspired by natural selection for feature selection and hyperparameter tuning.',
+                tags: ['Evolution', 'Optimization', 'Selection', 'Mutation']
+            },
+            {
+                icon: '📉',
+                title: 'Early Stopping',
+                category: 'Deep Learning',
+                description: 'Preventing overfitting by stopping training when validation performance stops improving.',
+                tags: ['Regularization', 'Overfitting', 'Validation', 'Training']
+            },
+            {
+                icon: '🎨',
+                title: 'Residual Networks',
+                category: 'Deep Learning',
+                description: 'Deep networks with skip connections enabling training of very deep architectures like ResNet.',
+                tags: ['ResNet', 'Skip Connections', 'Deep', 'Architecture']
+            },
+            {
+                icon: '🌟',
+                title: 'Inception Networks',
+                category: 'Deep Learning',
+                description: 'CNN architecture using parallel convolutions at multiple scales for efficient feature extraction.',
+                tags: ['GoogLeNet', 'Multi-Scale', 'Inception Module', 'Efficient']
+            },
+            {
+                icon: '🔥',
+                title: 'Activation Functions',
+                category: 'Deep Learning',
+                description: 'Non-linear functions like ReLU, sigmoid, tanh enabling neural networks to learn complex patterns.',
+                tags: ['ReLU', 'Sigmoid', 'Tanh', 'Leaky ReLU']
+            },
+            {
+                icon: '⚡',
+                title: 'Weight Initialization',
+                category: 'Deep Learning',
+                description: 'Proper initialization strategies like Xavier, He for stable training and faster convergence.',
+                tags: ['Xavier', 'He', 'Initialization', 'Convergence']
+            },
+            {
+                icon: '📊',
+                title: 'Bias in ML',
+                category: 'Mathematics',
+                description: 'Understanding and mitigating algorithmic bias for fair and ethical machine learning systems.',
+                tags: ['Fairness', 'Ethics', 'Discrimination', 'Responsible AI']
+            },
+            {
+                icon: '🎯',
+                title: 'Zero-Shot Learning',
+                category: 'Deep Learning',
+                description: 'Models making predictions on classes never seen during training using semantic relationships.',
+                tags: ['Unseen Classes', 'Semantic', 'Transfer', 'Generalization']
+            },
+            {
+                icon: '🔊',
+                title: 'Data Labeling',
+                category: 'Data Tools',
+                description: 'Annotating data for supervised learning using tools like Labelbox, CVAT, or crowdsourcing platforms.',
+                tags: ['Annotation', 'Labeling', 'Crowdsourcing', 'Supervision']
+            },
+            {
+                icon: '🌐',
+                title: 'GraphQL APIs',
+                category: 'MLOps',
+                description: 'Flexible API query language for efficient data fetching in ML applications and services.',
+                tags: ['API', 'Query Language', 'Data Fetching', 'Flexible']
+            },
+            {
+                icon: '🔐',
+                title: 'Differential Privacy',
+                category: 'MLOps',
+                description: 'Privacy-preserving techniques adding noise to protect individual data while enabling ML training.',
+                tags: ['Privacy', 'Noise', 'Security', 'Protection']
+            },
+            {
+                icon: '📦',
+                title: 'Data Versioning',
+                category: 'MLOps',
+                description: 'Tracking dataset versions using DVC, LakeFS for reproducibility and experiment management.',
+                tags: ['DVC', 'Versioning', 'Reproducibility', 'Dataset']
+            },
+            {
+                icon: '🎯',
+                title: 'Cosine Similarity',
+                category: 'Mathematics',
+                description: 'Measuring similarity between vectors using cosine of angle, common in NLP and recommendation systems.',
+                tags: ['Similarity', 'Distance', 'Vectors', 'NLP']
+            },
+            {
+                icon: '🔍',
+                title: 'Information Retrieval',
+                category: 'Deep Learning',
+                description: 'Finding relevant documents or information using ranking algorithms, embeddings, and search techniques.',
+                tags: ['Search', 'Ranking', 'Relevance', 'Embeddings']
+            },
+            {
+                icon: '🎨',
+                title: 'Pooling Layers',
+                category: 'Deep Learning',
+                description: 'Downsampling feature maps in CNNs using max pooling or average pooling for spatial reduction.',
+                tags: ['Max Pooling', 'Average Pooling', 'Downsampling', 'CNNs']
+            },
+            {
+                icon: '🌊',
+                title: 'Batch Size',
+                category: 'Deep Learning',
+                description: 'Number of samples processed before updating model weights, affecting training speed and convergence.',
+                tags: ['Training', 'Memory', 'Convergence', 'Hyperparameter']
+            },
+            {
+                icon: '📈',
+                title: 'Epochs',
+                category: 'Deep Learning',
+                description: 'Complete passes through training dataset. More epochs can improve learning but risk overfitting.',
+                tags: ['Training', 'Iterations', 'Learning', 'Overfitting']
+            },
+            {
+                icon: '🎯',
+                title: 'Softmax Function',
+                category: 'Deep Learning',
+                description: 'Converts logits to probability distributions for multi-class classification output layers.',
+                tags: ['Probability', 'Multi-Class', 'Output Layer', 'Classification']
+            },
+            {
+                icon: '🔄',
+                title: 'Backpropagation',
+                category: 'Deep Learning',
+                description: 'Algorithm for computing gradients through neural networks enabling efficient parameter updates.',
+                tags: ['Gradients', 'Training', 'Chain Rule', 'Optimization']
+            },
+            {
+                icon: '📊',
+                title: 'Mean Absolute Error',
+                category: 'Mathematics',
+                description: 'Regression metric measuring average absolute differences between predictions and actual values.',
+                tags: ['MAE', 'Regression', 'Metric', 'Error']
+            },
+            {
+                icon: '📉',
+                title: 'Mean Squared Error',
+                category: 'Mathematics',
+                description: 'Common regression loss function penalizing larger errors more heavily than smaller ones.',
+                tags: ['MSE', 'RMSE', 'Loss Function', 'Regression']
+            },
+            {
+                icon: '🎯',
+                title: 'R-Squared',
+                category: 'Mathematics',
+                description: 'Statistical measure of how well predictions match actual data in regression models.',
+                tags: ['R²', 'Regression', 'Goodness of Fit', 'Evaluation']
+            },
+            {
+                icon: '🌐',
+                title: 'Bidirectional LSTM',
+                category: 'Deep Learning',
+                description: 'RNN processing sequences in both forward and backward directions for better context understanding.',
+                tags: ['BiLSTM', 'Sequential', 'Context', 'NLP']
+            },
+            {
+                icon: '🔍',
+                title: 'Attention Weights',
+                category: 'Deep Learning',
+                description: 'Learned importance scores determining which parts of input to focus on in sequence models.',
+                tags: ['Attention', 'Weights', 'Focus', 'Transformers']
+            },
+            {
+                icon: '🎨',
+                title: 'VGGNet',
+                category: 'Deep Learning',
+                description: 'Deep CNN architecture using small 3x3 filters stacked in layers for image classification.',
+                tags: ['VGG', 'Architecture', 'Image Classification', 'Deep']
+            },
+            {
+                icon: '⚡',
+                title: 'MobileNet',
+                category: 'Deep Learning',
+                description: 'Efficient CNN architecture using depthwise separable convolutions for mobile and embedded devices.',
+                tags: ['Mobile', 'Efficient', 'Lightweight', 'Edge']
+            },
+            {
+                icon: '🎯',
+                title: 'Anchor Boxes',
+                category: 'Deep Learning',
+                description: 'Predefined bounding boxes of various scales and ratios for object detection algorithms.',
+                tags: ['Object Detection', 'Bounding Box', 'YOLO', 'Detection']
+            },
+            {
+                icon: '🌟',
+                title: 'Non-Maximum Suppression',
+                category: 'Deep Learning',
+                description: 'Post-processing technique removing duplicate detections in object detection by selecting best boxes.',
+                tags: ['NMS', 'Object Detection', 'Post-Processing', 'Duplicates']
+            },
+            {
+                icon: '📊',
+                title: 'IoU (Intersection over Union)',
+                category: 'Deep Learning',
+                description: 'Metric measuring overlap between predicted and ground truth bounding boxes in object detection.',
+                tags: ['Metric', 'Object Detection', 'Overlap', 'Evaluation']
+            },
+            {
+                icon: '🔧',
+                title: 'Data Augmentation Pipeline',
+                category: 'Data Tools',
+                description: 'Automated sequence of transformations applied to training data for improved model robustness.',
+                tags: ['Augmentation', 'Pipeline', 'Transformations', 'Training']
+            },
+            {
+                icon: '🎭',
+                title: 'Mixup',
+                category: 'Data Tools',
+                description: 'Data augmentation creating synthetic samples by blending pairs of training examples and labels.',
+                tags: ['Augmentation', 'Synthetic', 'Blending', 'Regularization']
+            },
+            {
+                icon: '📈',
+                title: 'Learning Rate Decay',
+                category: 'Deep Learning',
+                description: 'Gradually reducing learning rate during training for fine-tuning and better convergence.',
+                tags: ['Learning Rate', 'Decay', 'Convergence', 'Training']
+            },
+            {
+                icon: '🎯',
+                title: 'Momentum',
+                category: 'Deep Learning',
+                description: 'Optimization technique using past gradients to accelerate convergence and escape local minima.',
+                tags: ['SGD', 'Optimization', 'Convergence', 'Acceleration']
+            },
+            {
+                icon: '🔄',
+                title: 'Adam Optimizer',
+                category: 'Deep Learning',
+                description: 'Adaptive learning rate optimizer combining momentum and RMSprop for efficient training.',
+                tags: ['Optimizer', 'Adaptive', 'Efficient', 'Popular']
+            },
+            {
+                icon: '🌊',
+                title: 'Gradient Clipping',
+                category: 'Deep Learning',
+                description: 'Limiting gradient magnitudes to prevent exploding gradients in deep networks and RNNs.',
+                tags: ['Gradients', 'Stability', 'Training', 'RNN']
+            },
+            {
+                icon: '🎨',
+                title: 'Skip Connections',
+                category: 'Deep Learning',
+                description: 'Direct connections bypassing layers in neural networks for improved gradient flow and training.',
+                tags: ['ResNet', 'Gradient Flow', 'Deep Networks', 'Architecture']
+            },
+            {
+                icon: '📊',
+                title: 'Confusion Matrix Analysis',
+                category: 'Mathematics',
+                description: 'Detailed examination of TP, FP, TN, FN for understanding model errors and performance patterns.',
+                tags: ['TP', 'FP', 'TN', 'FN']
+            },
+            {
+                icon: '🔍',
+                title: 'Feature Importance',
+                category: 'ML Frameworks',
+                description: 'Ranking features by impact on predictions using tree-based models or permutation methods.',
+                tags: ['Interpretability', 'Ranking', 'Trees', 'Analysis']
+            },
+            {
+                icon: '🎯',
+                title: 'Permutation Importance',
+                category: 'ML Frameworks',
+                description: 'Measuring feature importance by observing prediction changes when feature values are shuffled.',
+                tags: ['Feature Importance', 'Shuffling', 'Model-Agnostic', 'Interpretability']
+            },
+            {
+                icon: '🌐',
+                title: 'Partial Dependence Plots',
+                category: 'ML Frameworks',
+                description: 'Visualizing marginal effect of features on predictions for model interpretation and debugging.',
+                tags: ['PDP', 'Interpretability', 'Visualization', 'Analysis']
+            },
+            {
+                icon: '🔧',
+                title: 'Pipeline Orchestration',
+                category: 'MLOps',
+                description: 'Managing complex ML workflows with dependencies using tools like Airflow, Prefect, Kubeflow.',
+                tags: ['Workflow', 'Dependencies', 'Automation', 'Kubeflow']
+            },
+            {
+                icon: '📦',
+                title: 'Feature Store',
+                category: 'MLOps',
+                description: 'Centralized repository for storing, managing, and serving features for training and inference.',
+                tags: ['Features', 'Repository', 'Feast', 'Serving']
+            },
+            {
+                icon: '🎯',
+                title: 'Canary Deployment',
+                category: 'MLOps',
+                description: 'Gradually rolling out new model versions to subset of users for safe production deployment.',
+                tags: ['Deployment', 'Gradual Rollout', 'Testing', 'Production']
+            },
+            {
+                icon: '🔄',
+                title: 'Blue-Green Deployment',
+                category: 'MLOps',
+                description: 'Maintaining two identical production environments for zero-downtime model updates.',
+                tags: ['Deployment', 'Zero-Downtime', 'Production', 'Switching']
+            },
+            {
+                icon: '📊',
+                title: 'Model Performance Monitoring',
+                category: 'MLOps',
+                description: 'Tracking metrics, latency, throughput in production to detect degradation and trigger alerts.',
+                tags: ['Monitoring', 'Metrics', 'Alerting', 'Production']
+            },
+            {
+                icon: '🔍',
+                title: 'Shadow Deployment',
+                category: 'MLOps',
+                description: 'Running new model alongside production model to compare predictions without affecting users.',
+                tags: ['Testing', 'Comparison', 'Production', 'Safe']
+            },
+            {
+                icon: '🎨',
+                title: 'Semantic Segmentation',
+                category: 'Deep Learning',
+                description: 'Pixel-level classification assigning class label to every pixel in image for detailed understanding.',
+                tags: ['Segmentation', 'Pixel-Level', 'U-Net', 'Dense Prediction']
+            },
+            {
+                icon: '🌟',
+                title: 'Instance Segmentation',
+                category: 'Deep Learning',
+                description: 'Detecting and delineating individual object instances at pixel level combining detection and segmentation.',
+                tags: ['Mask R-CNN', 'Instance', 'Objects', 'Pixel-Level']
+            },
+            {
+                icon: '🎯',
+                title: 'Keypoint Detection',
+                category: 'Deep Learning',
+                description: 'Locating specific points of interest in images like joints in pose estimation or facial landmarks.',
+                tags: ['Pose Estimation', 'Landmarks', 'Detection', 'Computer Vision']
+            },
+            {
+                icon: '📈',
+                title: 'Curriculum Learning',
+                category: 'Deep Learning',
+                description: 'Training strategy presenting examples from easy to hard for improved learning efficiency.',
+                tags: ['Training Strategy', 'Easy-to-Hard', 'Learning', 'Efficiency']
+            },
+            {
+                icon: '🔄',
+                title: 'Self-Supervised Learning',
+                category: 'Deep Learning',
+                description: 'Learning representations from unlabeled data by creating pretext tasks for feature extraction.',
+                tags: ['Unsupervised', 'Pretext Tasks', 'Representations', 'Unlabeled']
+            },
+            {
+                icon: '🌐',
+                title: 'Contrastive Learning',
+                category: 'Deep Learning',
+                description: 'Learning by comparing similar and dissimilar samples for powerful representation learning.',
+                tags: ['SimCLR', 'Representations', 'Similarity', 'Self-Supervised']
+            }
+        ];
+
+        let currentFilter = 'all';
+        let searchTerm = '';
+
+        function renderSkills() {
+            const grid = document.getElementById('skillsGrid');
+            const noResults = document.getElementById('noResults');
+            
+            let filtered = skills.filter(skill => {
+                const matchesCategory = currentFilter === 'all' || skill.category === currentFilter;
+                const matchesSearch = searchTerm === '' || 
+                    skill.title.toLowerCase().includes(searchTerm) ||
+                    skill.description.toLowerCase().includes(searchTerm) ||
+                    skill.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.style.display = 'none';
+                noResults.style.display = 'block';
+            } else {
+                grid.style.display = 'grid';
+                noResults.style.display = 'none';
+                
+                grid.innerHTML = filtered.map(skill => `
+                    <div class="skill-card">
+                        <div class="skill-header">
+                            <div class="skill-icon">${skill.icon}</div>
+                            <div class="skill-title">
+                                <h3>${skill.title}</h3>
+                                <span class="skill-category">${skill.category}</span>
+                            </div>
+                        </div>
+                        <p class="skill-description">${skill.description}</p>
+                        <div class="skill-tags">
+                            ${skill.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentFilter = e.target.dataset.filter;
+                renderSkills();
+            });
+        });
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchTerm = e.target.value.toLowerCase();
+            renderSkills();
+        });
+
+        renderSkills();
+    </script>
+</body>
+</html>
